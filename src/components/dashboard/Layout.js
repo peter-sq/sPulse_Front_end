@@ -1,18 +1,18 @@
 import React from 'react';
-import Navbar from './Navbar'; // Assuming you have a Navbar component
-import Sidebar from './SideBar'; // Assuming you have a Sidebar component
+import Navbar from './Navbar'; 
+import Sidebar from './SideBar'; 
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
-    <div className="flex">
-      <Sidebar /> {/* Sidebar component */}
-      <div className="flex-1">
-        <div className="p-4">
-          <Navbar /> {/* Navbar component */}
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <div className="p-4 shadow-4xl">
+          <Navbar />
         </div>
-        <div className="p-4">
-          <Outlet /> {/* This renders the child routes */}
+        <div className="p-4 flex-grow bg-[#f7f7f7]">
+          <Outlet />
         </div>
       </div>
     </div>
