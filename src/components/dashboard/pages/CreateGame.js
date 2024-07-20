@@ -105,13 +105,13 @@ const CreateGame = () => {
         <div className="mt-3 md:mt-0">
           <button
             onClick={handleAddGame}
-            className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
+            className="inline-block font-[Roboto] px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
           >
             Add Game
           </button>
         </div>
       </div>
-      <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+      <div className="mt-12 font-[sans-serif] shadow-sm border rounded-lg overflow-x-auto">
         <table className="w-full table-auto text-sm text-left">
           <thead className="bg-gray-50 text-gray-600 font-medium border-b">
             <tr>
@@ -124,7 +124,7 @@ const CreateGame = () => {
               <th className="py-3 px-6">Result</th>
             </tr>
           </thead>
-          <tbody className="text-gray-600 divide-y">
+          <tbody className="text-gray-600 divide-y font-[sans-serif]">
             {tableItems.map((item, idx) => (
               <tr key={idx}>
                 <td className="px-6 py-4 whitespace-nowrap">{item.SN}</td>
