@@ -13,7 +13,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 const ActionButtons = ({ row, onDelete }) => {
   return (
     <div className="flex space-x-1">
-      <Link to='/dashboard/create-game'>
+      <Link to={`/dashboard/create-game/${row.original._id}`}>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
           View
         </button>
@@ -34,6 +34,7 @@ function Home() {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [datas, setDatas] = useState([]);
+
 
   useEffect(() => {
     const fetchGames = async () => {

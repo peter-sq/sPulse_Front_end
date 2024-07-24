@@ -17,7 +17,7 @@ const Router = () => {
         { path: '/admin', element: <Dashboard /> },
         { path: 'dashboard', element: <Dashboard /> },
         { path: 'profile', element: <Profile /> },
-        { path: 'dashboard/create-game', element: <CreateGame /> }
+        { path: 'dashboard/create-game/:_id', element: <CreateGame /> }
       ]
     }
   ];
