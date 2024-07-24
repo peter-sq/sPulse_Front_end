@@ -13,7 +13,7 @@ const ErrorAlert = ({ message, onClose }) => {
         <div className="p-6">
           <div className="flex items-start">
             <div className="flex-shrink-0">
-              <svg className="h-6 w-6 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-6 w-6 text-[red]" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 00-2 0v4a1 1 0 002 0V7zm0 6a1 1 0 10-2 0 1 1 0 002 0z" clipRule="evenodd" />
               </svg>
             </div>
@@ -24,7 +24,7 @@ const ErrorAlert = ({ message, onClose }) => {
               <div className="mt-3 flex space-x-7">
                 <button
                   onClick={refresh}
-                  className="bg-red-500 text-white rounded-md px-4 py-2 text-sm leading-5 font-medium hover:bg-red-400 focus:outline-none focus:bg-red-400"
+                  className="bg-red text-white rounded-md px-4 py-2 text-sm leading-5 font-medium hover:bg-red-400 focus:outline-none focus:bg-red-400"
                 >
                   Close
                 </button>
