@@ -9,14 +9,20 @@ import ErrorAlert from '../../../shared/Modals/errorAlert';
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 const CreateGame = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
-  const [modalTitle, setModalTitle] = useState('');
+  const [editModal, setEditModal] = useState(false);
   const [tableItems, setTableItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formDatas, setFormDatas] = useState({
+    prediction: "",
+    odds: "",
+    result: "",
+    fixtures: "",
+    time: "",
+  });
   const [formData, setFormData] = useState({
     prediction: "",
     odds: "",
@@ -24,6 +30,8 @@ const CreateGame = () => {
     fixtures: "",
     time: ""
   });
+
+  const [itemId, setItemId] = useState(null);
 
   const { _id } = useParams();
 
@@ -56,6 +64,12 @@ const CreateGame = () => {
     console.log(`Updated form data: ${name} = ${value}`);
   };
 
+  const handleEditOnChange = (e) => {
+    const { name, value } = e.target;
+    setFormDatas((prevData) => ({ ...prevData, [name]: value }));
+    console.log(`Updated form data: ${name} = ${value}`);
+  };
+
   const AddGames = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -68,63 +82,73 @@ const CreateGame = () => {
       setShowAlert(true);
     } catch (error) {
       console.error('There was an error submitting this form', error);
-      setAlertMessage('Failed to submit data!');
-      setShowAlert(true);
+      ErrorAlert('Failed to submit data!');
+      ErrorAlert(true);
     } finally {
       setLoading(false);
     }
   };
 
   const handleEditGame = (data) => {
-    setFormData({
+    setFormDatas({
       prediction: data.prediction,
       odds: data.odds,
       result: data.result,
       fixtures: data.fixtures,
       time: data.time,
     });
-    setModalTitle('Edit Game');
-    setModalContent(
-      <form onSubmit={AddGames} className="max-w-md mx-auto space-y-4 font-[sans-serif] bg-gray-100 text-[#333] mt-4">
-        <input
-          type="time"
-          name="time"
-          value={formData.time}
-          onChange={handleOnChange}
-          placeholder="Game Time"
-          className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-        />
-        <input
-          type="text"
-          name="odds"
-          value={formData.odds}
-          onChange={handleOnChange}
-          placeholder="Game Odds"
-          className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-        />
-        <input
-          type="text"
-          name="fixtures"
-          value={formData.fixtures}
-          onChange={handleOnChange}
-          placeholder="Fixtures"
-          className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-        />
-        <input
-          type="text"
-          name="prediction"
-          value={formData.prediction}
-          onChange={handleOnChange}
-          placeholder="Predictions"
-          className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-        />
-        <button type="submit" className="mt-8 px-6 py-2.5 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-sm">
-          Submit
-        </button>
-      </form>
-    );
-    setModalOpen(true);
+    setItemId(data._id);
+    setEditModal(true);
   };
+
+  //handle edit Game
+  const handleEditGameSubmission = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setShowAlert(false);
+    try {
+      const response = await axios.patch(`${BASE_URL}/api/v1/admin/post/edit-game/${_id}/item/${itemId}`, formDatas);
+      setEditModal(false);
+      setFormDatas({ prediction: '', time: '', odds: '', result: '', fixtures: '' });
+      setAlertMessage('Game Updated successfully!');
+      setShowAlert(true);
+      // Optionally refetch the predictions to update the table
+      const updatedResponse = await axios.get(`${BASE_URL}/api/v1/user/all-games/${_id}`);
+      setTableItems(updatedResponse.data.predictions);
+    } catch (error) {
+      console.error('There was an error updating this game', error);
+      ErrorAlert('Failed to update data!');
+      ErrorAlert(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //handle delete game
+ 
+
+  const handleDeleteGame = async (itemId) => {
+    setLoading(true);
+    setShowAlert(false);
+     try {
+    
+      await axios.delete(`${BASE_URL}/api/v1/admin/post/delete-game/${_id}/item/${itemId._id}`);
+      setAlertMessage('Game Deleted successfully!');
+      setShowAlert(true);
+      // Refetch the predictions to update the table
+      const updatedResponse = await axios.get(`${BASE_URL}/api/v1/user/all-games/${_id}`);
+      setTableItems(updatedResponse.data.predictions);
+      
+     } catch (error) {
+      console.error('There was an error deleting this game', error);
+      ErrorAlert('Failed to delete data!');
+      ErrorAlert(true);
+      
+     } finally{
+      setLoading(false);
+     }
+
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8">
@@ -139,6 +163,7 @@ const CreateGame = () => {
         </div>
       </div>
       <div className="mt-12 font-[sans-serif] shadow-sm border rounded-lg overflow-x-auto">
+      {tableItems.length > 0 ? (
         <table className="w-full table-auto text-sm text-left">
           <thead className="bg-gray-50 text-gray-600 font-medium border-b">
             <tr>
@@ -170,6 +195,7 @@ const CreateGame = () => {
                     Edit
                   </button>
                   <button
+                     onClick={() => handleDeleteGame(item)}
                     className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
                   >
                     Delete
@@ -179,7 +205,11 @@ const CreateGame = () => {
             ))}
           </tbody>
         </table>
+           ) : (
+            <p className="p-4 text-center text-gray-600">No games available.</p>
+          )}
       </div>
+      {/* start add game modal */}
       {showModal && (
         <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
           <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -234,7 +264,7 @@ const CreateGame = () => {
                     name="result"
                     value={formData.result}
                     onChange={handleOnChange}
-                    placeholder="Predictions"
+                    placeholder="Result"
                     className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
                   />
                   <button type="submit" className="mt-8 px-6 py-2.5 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-sm">
@@ -256,10 +286,94 @@ const CreateGame = () => {
           {alertMessage === 'Game Created successfully!' ? (
             <SuccessAlert message={alertMessage} onClose={() => setShowAlert(false)} />
           ) : (
+            <SuccessAlert message={alertMessage} onClose={() => setShowAlert(false)} />
+          )}
+        </div>
+      )}
+      {/* end add game modal */}
+
+    {/* start edit modal */}
+    {editModal && (
+        <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+          <div className="relative w-auto my-6 mx-auto max-w-3xl">
+            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+              <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+                <h3 className="text-3xl font=semibold">Edit Game</h3>
+                <button
+                  className="bg-transparent border-0 text-black float-right"
+                  onClick={() => setEditModal(false)}
+                >
+                  <span className="text-black opacity-7 h-6 w-6 text-xl block bg-gray-400 py-0 rounded-full">
+                    <p className="text-xl font-bold">X</p>
+                  </span>
+                </button>
+              </div>
+              <div className="relative p-6 flex-auto">
+                <form onSubmit={handleEditGameSubmission} className="max-w-md mx-auto space-y-4 font-[sans-serif] bg-gray-100 text-[#333] mt-4">
+                  <input
+                    type="time"
+                    name="time"
+                    value={formDatas.time}
+                    onChange={handleEditOnChange}
+                    placeholder="Game Time"
+                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                  />
+                  <input
+                    type="text"
+                    name="odds"
+                    value={formDatas.odds}
+                    onChange={handleEditOnChange}
+                    placeholder="Game Odds"
+                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                  />
+                  <input
+                    type="text"
+                    name="fixtures"
+                    value={formDatas.fixtures}
+                    onChange={handleEditOnChange}
+                    placeholder="Fixtures"
+                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                  />
+                  <input
+                    type="text"
+                    name="prediction"
+                    value={formDatas.prediction}
+                    onChange={handleEditOnChange}
+                    placeholder="Predictions"
+                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                  />
+                     <input
+                    type="text"
+                    name="result"
+                    value={formDatas.result}
+                    onChange={handleEditOnChange}
+                    placeholder="Result"
+                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                  />
+                  <button type="submit" className="mt-8 px-6 py-2.5 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-sm">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 z-50">
+          <ClipLoader color="#ffffff" loading={loading} size={50} />
+        </div>
+      )}
+      {showAlert && (
+        <div className="fixed bottom-4 right-4 z-50">
+          {alertMessage === 'Game updated successfully!' ? (
+            <SuccessAlert message={alertMessage} onClose={() => setShowAlert(false)} />
+          ) : (
             <ErrorAlert message={alertMessage} onClose={() => setShowAlert(false)} />
           )}
         </div>
       )}
+      {/* end edit modal */}
     </div>
   );
 };
