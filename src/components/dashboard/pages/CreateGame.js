@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '../../../shared/Modals/Modal';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
@@ -151,12 +150,13 @@ const CreateGame = () => {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+    <div className="max-w-screen-xl mx-auto px-4 md:pl-[5rem]">
       <div className="items-start justify-between md:flex">
         <div className="mt-3 md:mt-0">
           <button
             onClick={() => setShowModal(true)}
-            className="inline-block font-[Roboto] px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
+            className="inline-block font-[Roboto] px-4 py-2 text-white duration-150
+             font-medium bg-[#38bdf8] rounded-lg hover:bg-indigo-500 py-2 active:bg-indigo-700 md:text-lg"
           >
             Add Game
           </button>
@@ -165,38 +165,40 @@ const CreateGame = () => {
       <div className="mt-12 font-[sans-serif] shadow-sm border rounded-lg overflow-x-auto">
       {tableItems.length > 0 ? (
         <table className="w-full table-auto text-sm text-left">
-          <thead className="bg-gray-50 text-gray-600 font-medium border-b">
+          <thead className="bg-red text-red font-medium border-b">
             <tr>
-              <th className="py-3 px-6">S/N</th>
-              <th className="py-3 px-6">ID</th>
-              <th className="py-3 px-6">Time</th>
-              <th className="py-3 px-6">Odds</th>
-              <th className="py-3 px-6">Prediction</th>
-              <th className="py-3 px-6">Fixtures</th>
-              <th className="py-3 px-6">Result</th>
-              <th className="py-3 px-6">Actions</th> 
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">S/N</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">ID</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Time</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Odds</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Prediction</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Fixtures</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Result</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Actions</th> 
             </tr>
           </thead>
           <tbody className="text-gray-600 divide-y font-[sans-serif]">
             {tableItems.map((item, idx) => (
               <tr key={idx}>
-                <td className="px-6 py-4 whitespace-nowrap">{idx + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item._id}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.time}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.odds}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.prediction}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.fixtures}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.result}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{idx + 1}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item._id}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.time}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.odds}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.prediction}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.fixtures}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.result}</td>
                 <td className="text-right px-6 whitespace-nowrap">
                   <button
                     onClick={() => handleEditGame(item)}
-                    className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                    className="py-2 px-3 text-[#38bdf8] font-medium text-blue hover:text-indigo-500 
+                    duration-150 hover:bg-blue rounded-lg text-lg"
                   >
                     Edit
                   </button>
                   <button
                      onClick={() => handleDeleteGame(item)}
-                    className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
+                    className="py-2 leading-none text-lg px-3 font-medium text-red hover:text-red
+                     duration-150 hover:bg-gray-50 rounded-lg"
                   >
                     Delete
                   </button>
@@ -259,14 +261,18 @@ const CreateGame = () => {
                     placeholder="Predictions"
                     className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
                   />
-                     <input
-                    type="text"
-                    name="result"
-                    value={formData.result}
-                    onChange={handleOnChange}
-                    placeholder="Result"
-                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-                  />
+                          <select
+                            name="result"
+                            value={formData.result}
+                            onChange={handleOnChange}
+                            className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                          >
+                            <option value="">Select Game Result</option>
+                            <option value="win">Win</option>
+                            <option value="lose">Lose</option>
+                            <option value="Pending">Pending</option>
+                          </select>
+                   
                   <button type="submit" className="mt-8 px-6 py-2.5 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-sm">
                     Submit
                   </button>
@@ -342,14 +348,17 @@ const CreateGame = () => {
                     placeholder="Predictions"
                     className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
                   />
-                     <input
-                    type="text"
-                    name="result"
-                    value={formDatas.result}
-                    onChange={handleEditOnChange}
-                    placeholder="Result"
-                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-                  />
+                    <select
+                      name="result"
+                      value={formDatas.result}
+                      onChange={handleEditOnChange}
+                      className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                    >
+                      <option value="">Select Game Result</option>
+                      <option value="win">Win</option>
+                      <option value="lose">Lose</option>
+                      <option value="Pending">Pending</option>
+                    </select>
                   <button type="submit" className="mt-8 px-6 py-2.5 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-sm">
                     Submit
                   </button>
