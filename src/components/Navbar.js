@@ -14,8 +14,8 @@ export default () => {
                     <a href="javascript:void(0)">
                         <img
                             src={homeImages.logo2}
-                            width={80} 
-                            height={40}
+                            width={50} 
+                            height={20}
                             alt="Soccer Pulse Logo"
                         />
                     </a>
@@ -42,7 +42,7 @@ export default () => {
                       {
                           navigation.map((item, idx) => {
                               return (
-                                <li key={idx} className="font-Montserrat text-2xl 
+                                <li key={idx} className="font-Montserrat text-[1rem] 
                                         hover:text-red font-bold text-black">
                                     <a href={item.path}>
                                         { item.title }
@@ -54,8 +54,8 @@ export default () => {
                   </ul>
               </div>
               <div className="hidden md:inline-block">
-                <a href="javascript:void(0)" className="py-3 px-4 text-white font-Montserrat 
-                text-2xl font-bold  bg-red hover:bg-black rounded-md shadow">
+                <a href="javascript:void(0)" className="py-2 px-4 text-white font-Montserrat 
+                text-[1rem] font-bold  bg-red hover:bg-black rounded-md shadow">
                     Get in-touch
                 </a>
               </div>

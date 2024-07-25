@@ -10,7 +10,7 @@ const Footer = () => {
                 <div className="flex-1">
                     <div className="max-w-xs">
                         <img src={homeImages.logo2} className="w-32" />
-                        <p className="leading-relaxed mt-2 text-[15px]">
+                        <p className="leading-relaxed mt-2 text-[15px] font-Montserrat">
                             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
                         </p>
                     </div>
@@ -27,7 +27,7 @@ const Footer = () => {
                                 className="w-full p-2.5 outline-none"
                             />
                             <button
-                                className="p-2.5 rounded-md text-white bg-indigo-600 outline-none shadow-md focus:shadow-none sm:px-5"
+                                className="p-2.5 text-Roboto rounded-md text-white bg-red outline-none shadow-md focus:shadow-none sm:px-5"
                             >
                                 Subscribe
                             </button>
