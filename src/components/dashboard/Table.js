@@ -22,7 +22,8 @@ function GlobalFilter({
       <span className="text-gray-700">Search: </span>
       <input
         type="text"
-        className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring 
+        focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-2"
         value={value || ""}
         onChange={e => {
           setValue(e.target.value);
@@ -164,7 +165,7 @@ function Table({ columns, data }) {
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-red">
                   {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map(column => (
@@ -175,7 +176,7 @@ function Table({ columns, data }) {
                           className="group px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                           {...column.getHeaderProps(column.getSortByToggleProps())}
                         >
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between text-white text-[1rem]">
                             {column.render('Header')}
                             {/* Add a sort direction indicator */}
                             <span>
