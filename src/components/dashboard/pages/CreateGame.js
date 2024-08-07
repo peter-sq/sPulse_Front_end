@@ -60,7 +60,6 @@ const CreateGame = () => {
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    console.log(`Updated form data: ${name} = ${value}`);
   };
 
   const handleEditOnChange = (e) => {
@@ -74,7 +73,12 @@ const CreateGame = () => {
     setLoading(true);
     setShowAlert(false);
     try {
-      await axios.patch(`${BASE_URL}/api/v1/admin/post/add-game/${_id}`, formData);
+      const response = await axios.patch(`${BASE_URL}/api/v1/admin/post/add-game/${_id}`, formData, {
+        withCredentials: true
+      });
+
+      console.log("Login response:", response);
+  
       setModalOpen(false);
       setFormData({ prediction: '', time: '', odds: '', result: '', fixtures: '' });
       setAlertMessage('Game Created successfully!');
@@ -124,8 +128,6 @@ const CreateGame = () => {
   };
 
   //handle delete game
- 
-
   const handleDeleteGame = async (itemId) => {
     setLoading(true);
     setShowAlert(false);
