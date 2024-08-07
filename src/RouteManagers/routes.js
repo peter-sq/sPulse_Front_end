@@ -6,13 +6,18 @@ import Home from "../pages/Home";
 import Profile from '../components/dashboard/pages/Profile';
 import Dashboard from '../components/dashboard/pages/Dashboard';
 import CreateGame from "../components/dashboard/pages/CreateGame";
+import Registeration from "../pages/Registeration";
+import Login from "../pages/Login"
+
 
 const Router = () => {
   const routes = [
     { path: '/', element: <Home /> },
+    { path: '/register', element: <Registeration /> },
+    { path: '/login', element: <Login /> },
     {
       path: '/',
-      element: <Layout />, // This wraps the following routes in the Layout component
+      element: <Layout />, 
       children: [
         { path: '/admin', element: <Dashboard /> },
         { path: 'dashboard', element: <Dashboard /> },
