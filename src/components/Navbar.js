@@ -6,7 +6,6 @@ export default () => {
 
   const [state, setState] = useState(false)
 
-  // Replace javascript:void(0) path with your path
   return (
       <nav className="bg-white w-full border-b md:border-0 shadow-md md:static">
           <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
