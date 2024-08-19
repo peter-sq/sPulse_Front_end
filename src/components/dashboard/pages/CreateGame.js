@@ -10,6 +10,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 const CreateGame = () => {
   const [editModal, setEditModal] = useState(false);
   const [tableItems, setTableItems] = useState([]);
+  const [leagues, setLeagues] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -20,19 +21,46 @@ const CreateGame = () => {
     odds: "",
     result: "",
     fixtures: "",
-    time: "",
+    league: "",
   });
   const [formData, setFormData] = useState({
     prediction: "",
     odds: "",
     result: "",
     fixtures: "",
-    time: ""
+    league: ""
   });
 
   const [itemId, setItemId] = useState(null);
 
   const { _id } = useParams();
+
+  //fetch all countries league
+  // useEffect(() => {
+  //    const fetchLeague = async () => {
+  //     const options = {
+  //       method: 'GET',
+  //       url: 'https://sport-highlights-api.p.rapidapi.com/football/leagues',
+  //       headers: {
+  //         'x-rapidapi-key': 'bf0cbdb235msheaeb0c8dd838fa1p15e099jsnb14ddeaf8e9c',
+  //         'x-rapidapi-host': 'sport-highlights-api.p.rapidapi.com'
+      
+  //       }
+  //     };
+  //     try {
+  //       const response = await axios.request(options);
+  //       setLeagues(response.data.data)
+
+  //       console.log('res', response.data.name);
+        
+  //     } catch (error) {
+  //       console.log(error);
+        
+  //     }
+  //    };
+  //    fetchLeague();
+
+  // }, [])
 
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -80,7 +108,7 @@ const CreateGame = () => {
       console.log("Login response:", response);
   
       setModalOpen(false);
-      setFormData({ prediction: '', time: '', odds: '', result: '', fixtures: '' });
+      setFormData({ prediction: '', league: '', odds: '', result: '', fixtures: '' });
       setAlertMessage('Game Created successfully!');
       setShowAlert(true);
     } catch (error) {
@@ -98,7 +126,7 @@ const CreateGame = () => {
       odds: data.odds,
       result: data.result,
       fixtures: data.fixtures,
-      time: data.time,
+      league: data.league,
     });
     setItemId(data._id);
     setEditModal(true);
@@ -112,7 +140,7 @@ const CreateGame = () => {
     try {
       const response = await axios.patch(`${BASE_URL}/api/v1/admin/post/edit-game/${_id}/item/${itemId}`, formDatas);
       setEditModal(false);
-      setFormDatas({ prediction: '', time: '', odds: '', result: '', fixtures: '' });
+      setFormDatas({ prediction: '', league: '', odds: '', result: '', fixtures: '' });
       setAlertMessage('Game Updated successfully!');
       setShowAlert(true);
       // Optionally refetch the predictions to update the table
@@ -171,7 +199,7 @@ const CreateGame = () => {
             <tr>
               <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">S/N</th>
               <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">ID</th>
-              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Time</th>
+              <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">league</th>
               <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Odds</th>
               <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Prediction</th>
               <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Fixtures</th>
@@ -184,7 +212,7 @@ const CreateGame = () => {
               <tr key={idx}>
                 <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{idx + 1}</td>
                 <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item._id}</td>
-                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.time}</td>
+                <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.league}</td>
                 <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.odds}</td>
                 <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.prediction}</td>
                 <td className="px-6 py-4 text-lg capitalize whitespace-nowrap">{item.fixtures}</td>
@@ -231,12 +259,27 @@ const CreateGame = () => {
               </div>
               <div className="relative p-6 flex-auto">
                 <form onSubmit={AddGames} className="max-w-md mx-auto space-y-4 font-[sans-serif] bg-gray-100 text-[#333] mt-4">
-                  <input
-                    type="time"
-                    name="time"
-                    value={formData.time}
+                {/* <select
+                name="league"
+                value={formData.league}
+                onChange={handleOnChange}
+                className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+              >
+                  <option value="" disabled>
+                    Select a league
+                  </option>
+                  {leagues.map((league, index) => (
+                    <option key={index} value={league.name}>
+                      {league.name}
+                    </option>
+                ))}
+              </select> */}
+               <input
+                    type="text"
+                    name="league"
+                    value={formData.league}
                     onChange={handleOnChange}
-                    placeholder="Game Time"
+                    placeholder="Enter League Name"
                     className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
                   />
                   <input
@@ -318,12 +361,27 @@ const CreateGame = () => {
               </div>
               <div className="relative p-6 flex-auto">
                 <form onSubmit={handleEditGameSubmission} className="max-w-md mx-auto space-y-4 font-[sans-serif] bg-gray-100 text-[#333] mt-4">
-                  <input
-                    type="time"
-                    name="time"
-                    value={formDatas.time}
+                {/* <select
+                name="league"
+                value={formData.league}
+                onChange={handleEditOnChange}
+                className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+              >
+                  <option value="" disabled>
+                    Select a league
+                  </option>
+                  {leagues.map((league, index) => (
+                    <option key={index} value={league.name}>
+                      {league.name}
+                    </option>
+                ))}
+              </select> */}
+                <input
+                    type="text"
+                    name="league"
+                    value={formDatas.handleOnChange}
                     onChange={handleEditOnChange}
-                    placeholder="Game Time"
+                    placeholder="Enter League Name"
                     className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
                   />
                   <input

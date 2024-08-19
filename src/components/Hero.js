@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import {icons} from '../components/images'
 import axios from 'axios';
 
 
@@ -45,7 +46,7 @@ const Hero = () => {
                                     <table className="w-full table-auto text-sm text-left">
                                         <thead className=" bg-red text-gray-600 font-medium border-b">
                                             <tr>
-                                                <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Time</th>
+                                                <th className="px-6 py-3 bg-gray-50 text-[14px] font-bold text-white leading-4 uppercase tracking-wide">League</th>
                                                 <th className="px-6 py-3 bg-gray-50  text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Fixtures</th>
                                                 <th className="px-6 py-3 bg-gray-50  text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Odds</th>
                                                 <th className="px-6 py-3 bg-gray-50  text-[14px] font-bold text-white leading-4 uppercase tracking-wide">Prediction</th>
@@ -55,11 +56,27 @@ const Hero = () => {
                                         <tbody className="bg-white divide-y divide-gray-600">
                                             {item.predictions.map((prediction) => (
                                                 <tr key={prediction._id}>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize  font-Roboto text-gray-500">{prediction.time}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize  font-Roboto text-gray-500">{prediction.league}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize  font-Roboto text-gray-500">{prediction.fixtures}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize  font-Roboto text-gray-500">{prediction.odds}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize  font-Roboto text-gray-500">{prediction.prediction}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize font-Roboto text-gray-500">{prediction.result}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-[16px] capitalize font-Roboto text-gray-500">
+                                                    {prediction.result === "win" ? (
+                                                            <img src={icons.win} alt="win" className='size-[1.5rem]' />
+                                                        ) :
+                                                        prediction.result === "lose" ? (
+                                                            <img src={icons.loss} alt="loss" className='size-[1.5rem]' />
+                                                        ) :
+
+                                                        prediction.result === "Pending" ? (
+                                                            <img src={icons.pending} alt="pending" className='size-[1.5rem]' />
+
+                                                        ) :
+                                                        
+                                                         (
+                                                            prediction.result
+                                                        )}
+                                                        </td>
                                                 </tr>
                                             ))}
                                         </tbody>
