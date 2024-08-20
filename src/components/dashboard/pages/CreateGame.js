@@ -4,13 +4,20 @@ import { useParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import SuccessAlert from '../../../shared/Modals/sucessAlert';  
 import ErrorAlert from '../../../shared/Modals/errorAlert';
+import { getAllLeagues, getTotalLeagues, findLeagueByName, searchLeagues} from 'all-country-football-leagues';
+import CustomDropdown from '../../CustomDropdown'
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+
+const leagues = getAllLeagues();
+console.log('All Leagues:', leagues);
+
 
 const CreateGame = () => {
   const [editModal, setEditModal] = useState(false);
   const [tableItems, setTableItems] = useState([]);
   const [leagues, setLeagues] = useState([]);
+  const [selectedLeague, setSelectedLeague] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -35,32 +42,20 @@ const CreateGame = () => {
 
   const { _id } = useParams();
 
-  //fetch all countries league
-  // useEffect(() => {
-  //    const fetchLeague = async () => {
-  //     const options = {
-  //       method: 'GET',
-  //       url: 'https://sport-highlights-api.p.rapidapi.com/football/leagues',
-  //       headers: {
-  //         'x-rapidapi-key': 'bf0cbdb235msheaeb0c8dd838fa1p15e099jsnb14ddeaf8e9c',
-  //         'x-rapidapi-host': 'sport-highlights-api.p.rapidapi.com'
-      
-  //       }
-  //     };
-  //     try {
-  //       const response = await axios.request(options);
-  //       setLeagues(response.data.data)
+  // Fetch all leagues on component mount
+  useEffect(() => {
+    const fetchLeagues = async () => {
+      try {
+        const allLeagues = getAllLeagues(); // Fetch all leagues from the package
+        setLeagues(allLeagues); 
+      } catch (error) {
+        console.error('Error fetching leagues:', error);
+      }
+    };
 
-  //       console.log('res', response.data.name);
-        
-  //     } catch (error) {
-  //       console.log(error);
-        
-  //     }
-  //    };
-  //    fetchLeague();
+    fetchLeagues();
+  }, []);
 
-  // }, [])
 
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -101,7 +96,10 @@ const CreateGame = () => {
     setLoading(true);
     setShowAlert(false);
     try {
-      const response = await axios.patch(`${BASE_URL}/api/v1/admin/post/add-game/${_id}`, formData, {
+      const response = await axios.patch(`${BASE_URL}/api/v1/admin/post/add-game/${_id}`, {
+        ...formData,
+        league: selectedLeague ? selectedLeague.name : '',
+      }, {
         withCredentials: true
       });
 
@@ -274,14 +272,27 @@ const CreateGame = () => {
                     </option>
                 ))}
               </select> */}
-               <input
-                    type="text"
-                    name="league"
-                    value={formData.league}
-                    onChange={handleOnChange}
-                    placeholder="Enter League Name"
-                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-                  />
+                 <CustomDropdown
+                  options={leagues}
+                  value={selectedLeague}
+                  onChange={setSelectedLeague}
+                />
+                  {/* <select
+                  id="league"
+                  name="league"
+                  value={formData.league}
+                  onChange={handleOnChange}
+                  className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                >
+                  <option value="">Select a league</option>
+                  {leagues.map((league, index) => (
+                    <option key={index} value={league.name}>
+                      <img src={league.logo} alt={league.name} 
+                      className="inline-block w-6 h-4 mr-2" />
+                      {league.name}
+                    </option>
+                  ))}
+                </select> */}
                   <input
                     type="text"
                     name="odds"
@@ -376,14 +387,21 @@ const CreateGame = () => {
                     </option>
                 ))}
               </select> */}
-                <input
-                    type="text"
-                    name="league"
-                    value={formDatas.handleOnChange}
-                    onChange={handleEditOnChange}
-                    placeholder="Enter League Name"
-                    className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
-                  />
+                  <select
+                  id="league"
+                  name="league"
+                  value={formDatas.league}
+                  onChange={handleEditOnChange}
+                  className="px-4 py-3 bg-blue-50 focus:bg-blue-100 w-full text-sm outline-[#333] rounded-sm transition-all"
+                >
+                  <option value="">Select a league</option>
+                  {leagues.map((league, index) => (
+                    <option key={index} value={league.name}>
+                      <img src={league.flag} alt={league.name} className="inline-block w-6 h-4 mr-2" />
+                      {league.name}
+                    </option>
+                  ))}
+                </select>
                   <input
                     type="text"
                     name="odds"
